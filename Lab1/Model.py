@@ -72,11 +72,14 @@ csv_dataset['sex'] = csv_dataset['sex'].apply(sex_tonum)
 csv_dataset['dataset'] = csv_dataset['dataset'].apply(origin_tonum)
 csv_dataset['cp'] = csv_dataset['cp'].apply(cp_tonum)
 csv_dataset['fbs'] = csv_dataset['fbs'].apply(fbs_tonum)
-csv_dataset['restecg'] = csv_dataset['restecg'].apply(cp_tonum)
+csv_dataset['restecg'] = csv_dataset['restecg'].apply(restecg_tonum)
 csv_dataset['exang'] = csv_dataset['exang'].apply(exang_tonum)
 csv_dataset['slope'] = csv_dataset['slope'].apply(slope_tonum)
 csv_dataset['thal'] = csv_dataset['thal'].apply(thal_tonum)
 
+#Mean Imputation
+mean_value = csv_dataset.mean()
+csv_dataset = csv_dataset.fillna(mean_value)
 
 #Seperate into features and targets
 X, y = csv_dataset.drop(['id', 'num'], axis=1).to_numpy(), csv_dataset['num'].to_numpy()
@@ -88,29 +91,20 @@ target_names = ["No heart disease", "Mild heart disease", "Medium heart disease"
 X_Train_Dev, X_Test, y_Train_Dev, y_Test= train_test_split(X, y, test_size=0.1, random_state=42)
 X_Train, X_Dev, y_Train, y_Dev = train_test_split(X_Train_Dev, y_Train_Dev, test_size=1/9, random_state=42)
 
-#Model 1: Nearest Neighbor
-Model_1 = sklearn.neighbors.KNeighborsClassifier(n_neighbors=1)
+# #Model 1: Nearest Neighbor
+Model_1 = sklearn.neighbors.KNeighborsClassifier(n_neighbors=5)
 Model_1.fit(X_Train, y_Train)
 
-#Model 2: Stochastic Gradient Descent
+# #Model 2: Stochastic Gradient Descent
 
 
-#Model 3:
+# #Model 3:
 
 
-#Make Predictions
+# #Make Predictions
 Model_1_Predictions = Model_1.predict(X_Dev)
 
-# #Display Results
-print(f"Model 1: {accuracy_score(X_Dev, Model_1_Predictions)} was the accuracy")
-
-
-
-print(X_Train)
-print(y_Train)
-print()
-print(X_Dev)
-print(y_Dev)
-print()
-print(X_Test)
-print(y_Test)
+# # #Display Results
+print(f"Model 1: {accuracy_score(y_Dev, Model_1_Predictions)}")
+#print(f"Model 2: {accuracy_score(y_Dev, Model_2_Predictions)}")
+#print(f"Model 3: {accuracy_score(y_Dev, Model_3_Predictions)}")
